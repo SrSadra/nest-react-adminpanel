@@ -10,14 +10,14 @@ import {
     UseInterceptors
 } from '@nestjs/common';
 import {UserService} from "./user.service";
-import {User} from "./models/user.entity";
+import {User} from "../../libs/shared/src/entities/user.entity";
 import * as bcrypt from 'bcryptjs';
-import {UserCreateDto} from "./models/user-create.dto";
-import {AuthGuard} from "../auth/auth.guard";
-import {UserUpdateDto} from "./models/user-update.dto";
+import {UserCreateDto} from "../../libs/shared/src/dtos/user-create.dto";
+import {AuthGuard} from "../../libs/shared/src/guards/auth.guard";
+import {UserUpdateDto} from "../../libs/shared/src/dtos/user-update.dto";
 import {AuthService} from "../auth/auth.service";
 import {Request} from 'express';
-import {HasPermission} from "../permission/has-permission.decorator";
+import {HasPermission} from "../../libs/shared/src/decorators/has-permission.decorator";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard)
@@ -31,13 +31,15 @@ export class UserController {
     }
 
     @Get()
-    @HasPermission('users')
+    // @HasPermission('users')
+    @HasPermission(["user"])
     async all(@Query('page') page = 1) {
         return this.userService.paginate(page, ['role']);
     }
 
     @Post()
-    @HasPermission('users')
+    // @HasPermission('users')
+    @HasPermission(["user"])
     async create(@Body() body: UserCreateDto): Promise<User> {
         const password = await bcrypt.hash('1234', 12);
 
@@ -51,7 +53,8 @@ export class UserController {
     }
 
     @Get(':id')
-    @HasPermission('users')
+    // @HasPermission('users')
+    @HasPermission(["user"])
     async get(@Param('id') id: number) {
         return this.userService.findOne({id}, ['role']);
     }
@@ -90,7 +93,8 @@ export class UserController {
     }
 
     @Put(':id')
-    @HasPermission('users')
+    // @HasPermission('users')
+    @HasPermission(["user"])
     async update(
         @Param('id') id: number,
         @Body() body: UserUpdateDto
@@ -106,7 +110,8 @@ export class UserController {
     }
 
     @Delete(':id')
-    @HasPermission('users')
+    // @HasPermission('users')
+    @HasPermission(["user"])
     async delete(@Param('id') id: number) {
         return this.userService.delete(id);
     }

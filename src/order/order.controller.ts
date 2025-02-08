@@ -9,14 +9,15 @@ import {
     UseInterceptors
 } from '@nestjs/common';
 import {OrderService} from "./order.service";
-import {AuthGuard} from "../auth/auth.guard";
+import {AuthGuard} from "../../libs/shared/src/guards/auth.guard";
 import {Response} from 'express';
 import {Parser} from "json2csv";
-import {Order} from "./order.entity";
-import {OrderItem} from "./order-item.entity";
-import {HasPermission} from "../permission/has-permission.decorator";
+import {Order} from "../../libs/shared/src/entities/order.entity";
+import {OrderItem} from "../../libs/shared/src/entities/order-item.entity";
+import {HasPermission} from "../../libs/shared/src/decorators/has-permission.decorator";
 
 @UseInterceptors(ClassSerializerInterceptor)
+@HasPermission(["admin" , "manager"])
 @UseGuards(AuthGuard)
 @Controller()
 export class OrderController {
@@ -24,13 +25,13 @@ export class OrderController {
     }
 
     @Get('orders')
-    @HasPermission('orders')
+    // @HasPermission('orders')
     async all(@Query('page') page = 1) {
         return this.orderService.paginate(page, ['order_items']);
     }
 
     @Post('export')
-    @HasPermission('orders')
+    // @HasPermission('orders')
     async export(@Res() res: Response) {
         const parser = new Parser({
             fields: ['ID', 'Name', 'Email', 'Product Title', 'Price', 'Quantity']
@@ -69,7 +70,7 @@ export class OrderController {
     }
 
     @Get('chart')
-    @HasPermission('orders')
+    // @HasPermission('orders')
     async chart() {
         return this.orderService.chart();
     }

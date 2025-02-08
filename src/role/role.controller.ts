@@ -1,6 +1,6 @@
 import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
 import {RoleService} from "./role.service";
-import {HasPermission} from "../permission/has-permission.decorator";
+import {HasPermission} from "../../libs/shared/src/decorators/has-permission.decorator";
 
 @Controller('roles')
 export class RoleController {
@@ -8,13 +8,15 @@ export class RoleController {
     }
 
     @Get()
-    @HasPermission('roles')
+    // @HasPermission('roles')
+    @HasPermission(["admin", "manager"])
     async all() {
         return this.roleService.all();
     }
 
     @Post()
-    @HasPermission('roles')
+    // @HasPermission('roles')
+    @HasPermission(["admin", "manager"])
     async create(
         @Body('name') name: string,
         @Body('permissions') ids: number[]
@@ -26,7 +28,8 @@ export class RoleController {
     }
 
     @Get(':id')
-    @HasPermission('roles')
+    // @HasPermission('roles')
+    @HasPermission(["admin", "manager"])
     async get(@Param('id') id: number) {
         return this.roleService.findOne({id}, ['permissions']);
     }
@@ -48,7 +51,8 @@ export class RoleController {
     }
 
     @Delete(':id')
-    @HasPermission('roles')
+    // @HasPermission('roles')
+    @HasPermission(["admin", "manager"])
     async delete(@Param('id') id: number) {
         return this.roleService.delete(id);
     }

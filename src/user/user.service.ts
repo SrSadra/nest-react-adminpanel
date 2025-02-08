@@ -1,9 +1,9 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {User} from "./models/user.entity";
+import {User} from "../../libs/shared/src/entities/user.entity";
 import {Repository} from "typeorm";
-import {AbstractService} from "../common/abstract.service";
-import {PaginatedResult} from "../common/paginated-result.interface";
+import {AbstractService} from "../../libs/shared/src/repositories/abstract.service";
+import {PaginatedResult} from "../../libs/shared/src/interfaces/paginated-result.interface";
 
 @Injectable()
 export class UserService extends AbstractService {

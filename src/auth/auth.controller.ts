@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common';
 import {UserService} from "../user/user.service";
 import * as bcrypt from 'bcryptjs';
-import {RegisterDto} from "./models/register.dto";
+import {RegisterDto} from "../../libs/shared/src/dtos/register.dto";
 import {JwtService} from "@nestjs/jwt";
 import {Request, Response} from 'express';
-import {AuthGuard} from "./auth.guard";
+import {AuthGuard} from "../../libs/shared/src/guards/auth.guard";
 import {AuthService} from "./auth.service";
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -34,22 +34,19 @@ export class AuthController {
             throw new BadRequestException('Passwords do not match!');
         }
 
-        const hashed = await bcrypt.hash(body.password, 12);
-
-        return this.userService.create({
-            first_name: body.first_name,
-            last_name: body.last_name,
-            email: body.email,
-            password: hashed,
-            role: {id: 1}
-        });
+        return await this.authService.create(
+            body.first_name,
+            body.last_name,
+            body.email,
+            body.password,
+        );
     }
 
     @Post('login')
     async login(
         @Body('email') email: string,
         @Body('password') password: string,
-        @Res({passthrough: true}) response: Response
+        @Res({passthrough: true}) response: Response //this allows you to modify the response (e.g., setting cookies) without losing the ability to return a value that to be handled normally.
     ) {
         const user = await this.userService.findOne({email});
 

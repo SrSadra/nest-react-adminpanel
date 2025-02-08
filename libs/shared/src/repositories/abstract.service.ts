@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {Repository} from "typeorm";
-import {PaginatedResult} from "./paginated-result.interface";
+import {PaginatedResult} from "../interfaces/paginated-result.interface";
 
 @Injectable()
 export abstract class AbstractService {
@@ -15,12 +15,12 @@ export abstract class AbstractService {
     }
 
     async paginate(page = 1, relations = []): Promise<PaginatedResult> {
-        const take = 15;
+        const take = 15; //number of entities we take 
 
-        const [data, total] = await this.repository.findAndCount({
-            take,
-            skip: (page - 1) * take,
-            relations
+        const [data, total] = await this.repository.findAndCount({ //total is how many entities exist
+            take, //number of entities to be taken
+            skip: (page - 1) * take, // continue from...
+            relations 
         });
 
         return {

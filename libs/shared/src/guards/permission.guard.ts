@@ -1,11 +1,11 @@
 import {CanActivate, ExecutionContext, Injectable} from '@nestjs/common';
 import {Observable} from 'rxjs';
 import {Reflector} from "@nestjs/core";
-import {AuthService} from "../auth/auth.service";
-import {UserService} from "../user/user.service";
-import {RoleService} from "../role/role.service";
-import {User} from "../user/models/user.entity";
-import {Role} from "../role/role.entity";
+import {AuthService} from "../../../../src/auth/auth.service";
+import {UserService} from "../../../../src/user/user.service";
+import {RoleService} from "../../../../src/role/role.service";
+import {User} from "../entities/user.entity";
+import {Role} from "../entities/role.entity";
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -29,12 +29,19 @@ export class PermissionGuard implements CanActivate {
 
         const user: User = await this.userService.findOne({id}, ['role']);
 
-        const role: Role = await this.roleService.findOne({id: user.role.id}, ['permissions']);
+        const role = user.role;
 
-        if (request.method === 'GET') {
-            return role.permissions.some(p => (p.name === `view_${access}`) || (p.name === `edit_${access}`));
+        if (access.includes(role.name)){
+            return true;
         }
+        return false;
 
-        return role.permissions.some(p => p.name === `edit_${access}`);
+        // const role: Role = await this.roleService.findOne({id: user.role.id}, ['permissions']);
+
+        // if (request.method === 'GET') {
+        //     return role.permissions.some(p => (p.name === `view_${access}`) || (p.name === `edit_${access}`));
+        // }
+
+        // return role.permissions.some(p => p.name === `edit_${access}`);
     }
 }

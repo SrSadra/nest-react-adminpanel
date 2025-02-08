@@ -1,10 +1,10 @@
 import {Module} from '@nestjs/common';
 import {OrderController} from './order.controller';
 import {OrderService} from './order.service';
-import {CommonModule} from "../common/common.module";
+import {CommonModule} from "../../libs/shared/src/common.module";
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {Order} from "./order.entity";
-import {OrderItem} from "./order-item.entity";
+import {Order} from "../../libs/shared/src/entities/order.entity";
+import {OrderItem} from "../../libs/shared/src/entities/order-item.entity";
 
 @Module({
     imports: [

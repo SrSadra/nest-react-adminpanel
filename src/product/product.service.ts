@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
-import {AbstractService} from "../common/abstract.service";
+import {AbstractService} from "../../libs/shared/src/repositories/abstract.service";
 import {InjectRepository} from "@nestjs/typeorm";
-import {Product} from "./models/product.entity";
+import {Product} from "../../libs/shared/src/entities/product.entity";
 import {Repository} from "typeorm";
 
 @Injectable()
