@@ -4,12 +4,17 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {AuthModule} from './auth/auth.module';
 import {CommonModule} from '../libs/shared/src/common.module';
 import {RoleModule} from './role/role.module';
-import {PermissionModule} from './permission/permission.module';
+// import {PermissionModule} from './permission/permission.module';
 import {ProductModule} from './product/product.module';
 import {OrderModule} from './order/order.module';
 import {APP_GUARD} from "@nestjs/core";
 import {PermissionGuard} from "../libs/shared/src/guards/permission.guard";
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { OrderItem } from 'libs/shared/src/entities/order-item.entity';
+import { Order } from 'libs/shared/src/entities/order.entity';
+import { Product } from 'libs/shared/src/entities/product.entity';
+import { Role } from 'libs/shared/src/entities/role.entity';
+import { User } from 'libs/shared/src/entities/user.entity';
 
 @Module({
     imports: [
@@ -25,6 +30,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
             database: configSer.get("MYSQL_DB"),
             autoLoadEntities: true,
             synchronize: true,
+            entities : [OrderItem,Order, Product, Role, User]
         }),
         inject : [ConfigService] 
         }),
@@ -32,7 +38,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         AuthModule,
         CommonModule,
         RoleModule,
-        PermissionModule,
+        // PermissionModule,
         ProductModule,
         OrderModule,
     ],

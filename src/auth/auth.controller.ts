@@ -17,7 +17,7 @@ import {Request, Response} from 'express';
 import {AuthGuard} from "../../libs/shared/src/guards/auth.guard";
 import {AuthService} from "./auth.service";
 
-@UseInterceptors(ClassSerializerInterceptor)
+// @UseInterceptors(ClassSerializerInterceptor)
 @Controller()
 export class AuthController {
 
@@ -30,6 +30,7 @@ export class AuthController {
 
     @Post('register')
     async register(@Body() body: RegisterDto) {
+        console.log(body);
         if (body.password !== body.password_confirm) {
             throw new BadRequestException('Passwords do not match!');
         }
@@ -48,6 +49,7 @@ export class AuthController {
         @Body('password') password: string,
         @Res({passthrough: true}) response: Response //this allows you to modify the response (e.g., setting cookies) without losing the ability to return a value that to be handled normally.
     ) {
+        
         const user = await this.userService.findOne({email});
 
         if (!user) {

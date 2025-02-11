@@ -3,11 +3,12 @@ import {Request} from 'express';
 import {JwtService} from "@nestjs/jwt";
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcryptjs';
+import { RoleService } from 'src/role/role.service';
 
 @Injectable()
 export class AuthService {
 
-    constructor(private jwtService: JwtService, private readonly userService: UserService) {
+    constructor(private jwtService: JwtService, private readonly userService: UserService, private readonly roleSer: RoleService) {
     }
 
     async userId(request: Request): Promise<number> {
@@ -20,12 +21,13 @@ export class AuthService {
 
     async create(first_name: string, last_name: string, email: string, password: string){
         const hashed = await bcrypt.hash(password, 12);
+        const role = await this.roleSer.findOne({id: 1});
         return this.userService.create({
             first_name,
             last_name,
             email,
             password: hashed,
-            role: {id: 1} // user role
+            role // user role
         });
     }
 }
